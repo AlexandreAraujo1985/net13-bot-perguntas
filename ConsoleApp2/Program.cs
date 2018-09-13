@@ -11,7 +11,7 @@ namespace ConsoleApp2
             string connectionString = (args.Length > 0) ? args[0] : "localhost";
             var botPerguntas = new BotPergunta(connectionString);
 
-            for(int i=0; ;i++)
+            for(int i=1; ;i++)
             {
                 Console.Write($"P{i}: ");
                 string texto = Console.ReadLine();
