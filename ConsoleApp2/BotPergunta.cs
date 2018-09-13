@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using StackExchange.Redis;
+using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
@@ -28,7 +29,24 @@ namespace ConsoleApp2
             _pub.Publish(CHANNEL_PERGUNTAS, pergunta);
         }
 
-        public IEnumerable<Resposta> LerRespostas(int id)
+        public async Task<Resposta[]> EsperarRespostasAsync(int id)
+        {
+            // espera 1 seg
+            await Task.Delay(1000);
+
+            var respostas = LerRespostas(id);
+            if(respostas.Length > 0)
+            {
+                return respostas;
+            }
+
+            await Task.Delay(8000);
+            respostas = LerRespostas(id);
+
+            return respostas;
+        }
+
+        private Resposta[] LerRespostas(int id)
         {
             string perguntaId = "P" + id.ToString();
 
@@ -38,7 +56,7 @@ namespace ConsoleApp2
                                     Autor = entry.Name,
                                     Texto = entry.Value
                                 })
-                                .ToList();
+                                .ToArray();
 
             return respostas;
         }
